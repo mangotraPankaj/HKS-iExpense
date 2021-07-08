@@ -13,28 +13,12 @@ class User: ObservableObject {
 }
 
 struct ContentView: View {
-    @State private var numbers = [Int]()
-    @State private var currentNumber = 1
+    @State private var currentNumber = UserDefaults.standard.integer(forKey: "Tap")
 
     var body: some View {
-        NavigationView {
-            VStack {
-                List {
-                    ForEach(numbers, id: \.self) {
-                        Text("\($0)")
-                    }
-                    .onDelete(perform: removeRows(at:))
-                }
-                Button("Add Number") {
-                    self.numbers.append(self.currentNumber)
-                    self.currentNumber += 1
-                }
-            }.navigationBarItems(leading: EditButton())
+        Button("Tap Count: \(currentNumber)") {
+            self.currentNumber += 1
         }
-    }
-
-    func removeRows(at offsets: IndexSet) {
-        numbers.remove(atOffsets: offsets)
     }
 }
 
