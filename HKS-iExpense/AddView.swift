@@ -34,7 +34,7 @@ struct AddView: View {
                     self.expenses.items.append(item)
                 }
             }, label: {
-                Text("Save")
+                Image(systemName: "bolt.horizontal.circle.fill")
             }))
         }
     }
