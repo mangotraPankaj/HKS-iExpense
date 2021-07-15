@@ -11,18 +11,17 @@ struct AddView: View {
     @State private var name = ""
     @State private var type = "Personal"
     @State private var amount = ""
-    
+    @State private var isUserError = false
     @Environment(\.presentationMode) var presentationMode
-    
-    
+
     @ObservedObject var expenses: Expenses
-    
-    static let types = ["Business","Personal"]
-    
+
+    static let types = ["Business", "Personal"]
+
     var body: some View {
         NavigationView {
             Form {
-                TextField("Name",text: $name)
+                TextField("Name", text: $name)
                 Picker("Type", selection: $type) {
                     ForEach(Self.types, id: \.self) {
                         Text($0)
@@ -31,21 +30,28 @@ struct AddView: View {
                 TextField("Amount", text: $amount)
                     .keyboardType(.numberPad)
             }.navigationBarTitle("Add new expense")
-            .navigationBarItems(trailing: Button(action: {
-                if let actualAmount = Int(self.amount) {
-                    let item = ExpenseItem(name: self.name, type: self.type, amount: actualAmount)
-                    self.expenses.items.append(item)
-                    self.presentationMode.wrappedValue.dismiss()
+                .navigationBarItems(trailing: Button(action: {
+                    if let actualAmount = Int(self.amount) {
+                        let item = ExpenseItem(name: self.name, type: self.type, amount: actualAmount)
+                        self.expenses.items.append(item)
+                        self.presentationMode.wrappedValue.dismiss()
+                    } else {
+                        isUserError = true
+                    }
+                }, label: {
+                    Image(systemName: "bolt.horizontal.circle.fill")
+                }).alert(isPresented: $isUserError) {
+                    Alert(title: Text("Invalid value"),
+                          message: Text("The amount is invalid. Please enter a correct value"),
+                          dismissButton: .default(Text("Got it!")))
                 }
-            }, label: {
-                Image(systemName: "bolt.horizontal.circle.fill")
-            }))
+                )
         }
     }
 }
+
 struct AddView_Previews: PreviewProvider {
     static var previews: some View {
         AddView(expenses: Expenses())
     }
 }
-
