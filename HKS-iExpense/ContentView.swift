@@ -54,6 +54,7 @@ struct ContentView: View {
                         }
                         Spacer()
                         Text("$\(item.amount)")
+                            .foregroundColor(TextColor(per: item.amount))
                     }
                     
                 }
@@ -74,6 +75,19 @@ struct ContentView: View {
 
     func deleteItems(at offsets: IndexSet) {
         expenses.items.remove(atOffsets: offsets)
+    }
+    
+    func TextColor(per amt: Int) -> Color {
+        switch amt {
+        case 0..<10:
+            return Color.yellow
+        case 10..<100:
+            return Color.green
+        case 100...:
+            return Color.red
+        default:
+            return Color.black
+        }
     }
 }
 
